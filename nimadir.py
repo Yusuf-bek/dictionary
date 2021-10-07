@@ -37,8 +37,7 @@ class Dictionary:
 			print("Invalid input. Input only should be letters[a-z] and not be an empty")
 			new_word_translate = input('Input translation of word: ').strip().lower()
 
-		self.new_word_en = new_word
-		self.new_word_uz = new_word_translate
+
 
 
 	def show_words(self):
@@ -55,7 +54,6 @@ class Dictionary:
 
 	def show_text(self):
 		print("""
-
 		Welcome to dicrionary!
 		_________________________________________
 
