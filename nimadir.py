@@ -50,7 +50,6 @@ class Dictionary:
 			new_word_translate = input('Input translation of word: ').strip().lower()
 
 		self.save_to_database(new_word, new_word_translate)
-		# self.check_word_inside()
 
 
 	def show_words(self):
