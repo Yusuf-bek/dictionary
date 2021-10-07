@@ -7,15 +7,10 @@ mydb = mysql.connector.connect(
 			password='123123123',
 			database='words'
 		)
-
 mycursor = mydb.cursor()
 
 
 class Dictionary:
-
-	def __init__(self):
-		self.new_word_en = None
-		self.new_word_uz = None
 
 	def entrance(self):
 		self.show_text()
@@ -23,6 +18,7 @@ class Dictionary:
 		option = input(": ").strip()
 
 		while option not in options:
+			self.clear_everything()
 			self.show_text()
 			option = input("Invalid input. Enter only [1, 2, 3, 4]: ").strip()
 
@@ -36,6 +32,7 @@ class Dictionary:
 			self.quit()
 
 	def add_new_word(self):
+
 		new_word = input("Input new english word: ").strip().lower()
 		while not new_word.isalpha():
 			self.clear_everything()
@@ -50,11 +47,17 @@ class Dictionary:
 
 		self.save_to_database(new_word, new_word_translate)
 
-
-
 	def show_words(self):
-		pass
+		mycursor.execute("select * from table_words")
+		var_show = mycursor.fetchall()
 
+		self.clear_everything()
+
+		print("\n")
+		print("[id]   [English]   [Uzbek]")
+		for i in var_show:
+			print("------------------------")
+			print(f"{i[0]}| {i[1]} - {i[2]}")
 
 	def search_word(self):
 		en_or_uz = input("""
@@ -99,7 +102,6 @@ Input:  1 -> uz - en
 	def quit(self):
 		print("Quit")
 
-
 	def show_text(self):
 		print("""
 		Welcome to dicrionary!
@@ -118,16 +120,20 @@ Input:  1 -> uz - en
 		_________________________________________
 		""")
 
-
-	def save_to_database(self, new_word_en, new_word_uz):
+	@staticmethod
+	def save_to_database(new_word_en, new_word_uz):
 
 		mycursor.execute(f"insert into table_words (english, uzbek) values ('{new_word_en}', '{new_word_uz}')")
 		mydb.commit()
 
 
+
 	@staticmethod
 	def clear_everything():
 		os.system("clear")
+
+
+
 
 
 en_uz = Dictionary()
