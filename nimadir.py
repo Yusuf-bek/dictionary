@@ -95,6 +95,7 @@ Input:  1 -> uz - en
 			print(prt[0][0])
 
 
+
 	def quit(self):
 		print("Quit")
 
