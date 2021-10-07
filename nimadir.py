@@ -1,4 +1,15 @@
 import os
+import mysql.connector
+
+mydb = mysql.connector.connect(
+			host='localhost',
+			user='Abdulaziz',
+			password='123123123',
+			database='words'
+		)
+
+mycursor = mydb.cursor()
+
 
 class Dictionary:
 
@@ -37,15 +48,51 @@ class Dictionary:
 			print("Invalid input. Input only should be letters[a-z] and not be an empty")
 			new_word_translate = input('Input translation of word: ').strip().lower()
 
+		self.save_to_database(new_word, new_word_translate)
 
 
 
 	def show_words(self):
-		print("Show words")
+		pass
 
 
 	def search_word(self):
-		print("Search word")
+		en_or_uz = input("""
+Input:  1 -> uz - en
+	2 -> en - uz
+>>> """).strip()
+		opt = ['1', '2']
+		while en_or_uz not in opt:
+			self.clear_everything()
+			print("Invalid input. You can input only 1 or 2!")
+			en_or_uz = input("""
+Input:  1 -> uz - en
+	2 -> en - uz
+>>> """).strip()
+
+		if en_or_uz == opt[0]:
+			self.clear_everything()
+			search_word = input("Enter the word you are searching: ").strip().lower()
+			while not search_word.isalpha():
+				self.clear_everything()
+				print("Invalid input. Try again.")
+				search_word = input("Enter the word you are searching: ").strip().lower()
+
+			mycursor.execute(f"select english from table_words where uzbek='{search_word}'")
+			prt = mycursor.fetchall()
+			print(prt[0][0])
+
+		else:
+			self.clear_everything()
+			search_word = input("Enter the word you are searching: ").strip().lower()
+			while not search_word.isalpha():
+				self.clear_everything()
+				print("Invalid input. Try again.")
+				search_word = input("Enter the word you are searching: ").strip().lower()
+
+			mycursor.execute(f"select uzbek from table_words where english='{search_word}'")
+			prt = mycursor.fetchall()
+			print(prt[0][0])
 
 
 	def quit(self):
@@ -69,6 +116,13 @@ class Dictionary:
 
 		_________________________________________
 		""")
+
+
+	def save_to_database(self, new_word_en, new_word_uz):
+
+		mycursor.execute(f"insert into table_words (english, uzbek) values ('{new_word_en}', '{new_word_uz}')")
+		mydb.commit()
+
 
 	@staticmethod
 	def clear_everything():
