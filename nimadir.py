@@ -9,12 +9,8 @@ mydb = mysql.connector.connect(
 		)
 mycursor = mydb.cursor()
 
+
 class Dictionary:
-
-	def __init__(self):
-		self.new_word_en = None
-		self.new_word_uz = None
-
 
 	def entrance(self):
 		self.show_text()
@@ -51,6 +47,9 @@ class Dictionary:
 
 		self.save_to_database(new_word, new_word_translate)
 
+		### To choose quit or go back to main menu ###
+		self.menu_or_quit()
+
 
 	def show_words(self):
 		mycursor.execute("select * from table_words")
@@ -64,23 +63,70 @@ class Dictionary:
 			print("------------------------")
 			print(f"{i[0]}| {i[1]} - {i[2]}")
 
-
-
+		### To choose quit or go back to main menu ###
+		self.menu_or_quit()
 
 
 
 
 	def search_word(self):
-		print("Search word")
+		en_or_uz = input("""
+Input:  1 -> uz - en
+	2 -> en - uz
+>>> """).strip()
+		opt = ['1', '2']
+		while en_or_uz not in opt:
+			self.clear_everything()
+			print("Invalid input. You can input only 1 or 2!")
+			en_or_uz = input("""
+Input:  1 -> uz - en
+	2 -> en - uz
+>>> """).strip()
+
+		if en_or_uz == opt[0]:
+			self.clear_everything()
+			search_word = input("Enter the word you are searching: ").strip().lower()
+			while not search_word.isalpha():
+				self.clear_everything()
+				print("Invalid input. Try again.")
+				search_word = input("Enter the word you are searching: ").strip().lower()
+
+			mycursor.execute(f"select english from table_words where uzbek='{search_word}'")
+			prt = mycursor.fetchall()
+			print(prt[0][0])
+
+		else:
+			self.clear_everything()
+			search_word = input("Enter the word you are searching: ").strip().lower()
+			while not search_word.isalpha():
+				self.clear_everything()
+				print("Invalid input. Try again.")
+				search_word = input("Enter the word you are searching: ").strip().lower()
+
+			mycursor.execute(f"select uzbek from table_words where english='{search_word}'")
+			prt = mycursor.fetchall()
+			print(prt[0][0])
+
+		### To choose quit or go back to main menu ###
+		self.menu_or_quit()
+
 
 
 	def quit(self):
-		print("Quit")
+		self.clear_everything()
+
+		print("\n")
+		print(">>> Thanks for using our dictionary! <<<")
+		print("    ________________________________     ")
+
+
+
+
+
 
 
 	def show_text(self):
 		print("""
-
 		Welcome to dicrionary!
 		_________________________________________
 
@@ -98,7 +144,24 @@ class Dictionary:
 		""")
 
 
-	def save_to_database(self, new_word_en, new_word_uz):
+	def menu_or_quit(self):
+
+		quit_menu = input("[Quit/Menu]: ").strip().lower()
+
+		while quit_menu != 'quit' and quit_menu != 'menu':
+			print("Invalid input! >>>")
+			quit_menu = input("[Quit/Menu]: ").strip().lower()
+
+		if quit_menu == 'quit':
+			self.quit()
+		elif quit_menu == 'menu':
+			self.clear_everything()
+			self.entrance()
+
+
+
+	@staticmethod
+	def save_to_database(new_word_en, new_word_uz):
 
 		mycursor.execute(f"insert into table_words (english, uzbek) values ('{new_word_en}', '{new_word_uz}')")
 		mydb.commit()
