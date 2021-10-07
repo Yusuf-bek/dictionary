@@ -32,12 +32,15 @@ class Dictionary:
 			self.quit()
 
 	def add_new_word(self):
-
 		new_word = input("Input new english word: ").strip().lower()
 		while not new_word.isalpha():
 			self.clear_everything()
 			print("Invalid input. Input only should be letters[a-z] and not be an empty")
 			new_word = input("Input new english word: ").strip().lower()
+
+		if self.is_exists(new_word):
+			print("This word already exists in dictionary")
+			self.add_new_word()
 
 		new_word_translate = input('Input translation of word: ').strip().lower()
 		while not new_word_translate.isalpha():
@@ -45,7 +48,8 @@ class Dictionary:
 			print("Invalid input. Input only should be letters[a-z] and not be an empty")
 			new_word_translate = input('Input translation of word: ').strip().lower()
 
-		self.save_to_database(new_word, new_word_translate)
+			self.save_to_database(new_word, new_word_translate)
+
 
 	def show_words(self):
 		mycursor.execute("select * from table_words")
@@ -100,7 +104,7 @@ Input:  1 -> uz - en
 
 
 	def quit(self):
-		print("Quit")
+		pass
 
 	def show_text(self):
 		print("""
@@ -126,13 +130,18 @@ Input:  1 -> uz - en
 		mycursor.execute(f"insert into table_words (english, uzbek) values ('{new_word_en}', '{new_word_uz}')")
 		mydb.commit()
 
-
+	@staticmethod
+	def is_exists(something):
+		mycursor.execute("select english from table_words")
+		check = mycursor.fetchall()
+		for word in check:
+			if word[0][0] == something:
+				return False
+		return True
 
 	@staticmethod
 	def clear_everything():
 		os.system("clear")
-
-
 
 
 
