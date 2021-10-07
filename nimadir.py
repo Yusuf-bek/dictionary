@@ -1,4 +1,12 @@
 import os
+import mysql.connector
+
+mydb = mysql.connector.connect(
+			host='localhost',
+			user='Abdulaziz',
+			password='123123123',
+			database='words'
+		)
 
 class Dictionary:
 
@@ -37,8 +45,7 @@ class Dictionary:
 			print("Invalid input. Input only should be letters[a-z] and not be an empty")
 			new_word_translate = input('Input translation of word: ').strip().lower()
 
-		self.new_word_en = new_word
-		self.new_word_uz = new_word_translate
+		self.save_to_database(new_word, new_word_translate)
 
 
 	def show_words(self):
@@ -71,6 +78,14 @@ class Dictionary:
 
 		_________________________________________
 		""")
+
+
+	def save_to_database(self, new_word_en, new_word_uz):
+		mycursor = mydb.cursor()
+
+		mycursor.execute(f"insert into table_words (english, uzbek) values ('{new_word_en}', '{new_word_uz}')")
+		mydb.commit()
+
 
 	@staticmethod
 	def clear_everything():
