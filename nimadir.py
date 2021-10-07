@@ -1,8 +1,26 @@
+import os
+
 class Dictionary:
 
-	def add_new_word(self):
-		pass
+	def __init__(self):
+		self.new_word_en = None
+		self.new_word_uz = None
 
+	def add_new_word(self):
+		new_word = input("Input new english word: ").strip().lower()
+		while not new_word.isalpha():
+			self.clear_everything()
+			print("Invalid input. Input only should be letters[a-z] and not be an empty")
+			new_word = input("Input new english word: ").strip().lower()
+
+		new_word_translate = input('Input translation of word: ').strip().lower()
+		while not new_word_translate.isalpha():
+			self.clear_everything()
+			print("Invalid input. Input only should be letters[a-z] and not be an empty")
+			new_word_translate = input('Input translation of word: ').strip().lower()
+
+		self.new_word_en = new_word
+		self.new_word_uz = new_word_translate
 
 	def show_words(self):
 		pass
@@ -33,5 +51,8 @@ class Dictionary:
 
 
 		_________________________________________
+		""")
 
-			""")
+	@staticmethod
+	def clear_everything():
+		os.system("clear")
