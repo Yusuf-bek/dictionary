@@ -6,6 +6,24 @@ class Dictionary:
 		self.new_word_en = None
 		self.new_word_uz = None
 
+	def entrance(self):
+		self.show_text()
+		options = '1234'
+		option = input(": ").strip()
+
+		while option not in options:
+			self.show_text()
+			option = input("Invalid input. Enter only [1, 2, 3, 4]: ").strip()
+
+		if option == options[0]:
+			self.add_new_word()
+		elif option == options[1]:
+			self.show_words()
+		elif option == options[2]:
+			self.search_word()
+		elif option == options[3]:
+			self.quit()
+
 	def add_new_word(self):
 		new_word = input("Input new english word: ").strip().lower()
 		while not new_word.isalpha():
@@ -22,16 +40,17 @@ class Dictionary:
 		self.new_word_en = new_word
 		self.new_word_uz = new_word_translate
 
+
 	def show_words(self):
-		pass
+		print("Show words")
 
 
 	def search_word(self):
-		pass
+		print("Search word")
 
 
 	def quit(self):
-		pass
+		print("Quit")
 
 
 	def show_text(self):
@@ -56,3 +75,8 @@ class Dictionary:
 	@staticmethod
 	def clear_everything():
 		os.system("clear")
+
+
+en_uz = Dictionary()
+en_uz.entrance()
+
